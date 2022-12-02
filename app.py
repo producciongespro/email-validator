@@ -19,11 +19,14 @@ def home ():
     return render_template(  "home.html")
 
 
-@app.route('/uploader', methods = ['POST'])
+@app.route('/validator', methods = ['POST'])
 def upload_file():
     emails = read_file(request, 'file')    
     res = validate_emails(emails, enrollment)
-    return render_template(  "results.html", wrong_emails=res )
+
+    if res:
+        return render_template(  "results.html", wrong_emails=res )
+    return render_template(  "all-ggod.html" )
   
 
 

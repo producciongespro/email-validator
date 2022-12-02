@@ -14,12 +14,11 @@
     <title>API Validator</title>
   </head>
   <body>
-    <div class="container">
-      <div class="row mt-2 mb-2">
-        <div class="col-12 text-center">
-          <h1>Email Validator</h1>
-        </div>
-      </div>
+    {% extends 'base.html' %}
+
+    {% block content %}
+    <div class="container">      
+   
       <div class="row">
         <div class="col-12">
           Lorem ipsum dolor sit amet consectetur adipisicing elit. Esse totam
@@ -29,17 +28,27 @@
         </div>
       </div>
       <div class="row">
-        <div class="col-12">
+        <div class="col-md-6 offset-md-3">
           <form
-            action="http://localhost:5000/uploader"
+            action="http://localhost:5000/validator"
             method="POST"
             enctype="multipart/form-data"
           >
-            <input type="file" name="file" />
-            <input type="submit" />
+
+
+          <div class="input-group mb-3">
+            <input type="file" class="form-control" id="file" name="file">
+            <label type="submit"  class="input-group-text" for="file">Subir archivo</label>
+          </div>  
+          
+          <div class="d-grid gap-2">            
+            <input class="btn btn-outline-info" type="submit" value="Enviar">            
+          </div>
+            
           </form>
         </div>
       </div>
     </div> 
+    {% endblock %}
   </body>
 </html>
