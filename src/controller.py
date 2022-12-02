@@ -24,6 +24,16 @@ def uploadFile (req, name, folder ):
         return os.path.join( folder, filename )
     return False
 
+def read_file (request, name ):
+    emails = []
+    for line in request.files.get(name):
+        string = str(line)
+        record = string.split("'")        
+        record = record[1]
+        email = record.split(",")[0]
+        emails.append(email)
+    return emails
+
 def loadEnrollment (pathFile):
     students=[]    
     with open(pathFile, newline='') as csvfile:

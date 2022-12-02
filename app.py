@@ -21,17 +21,10 @@ def home ():
 
 @app.route('/uploader', methods = ['POST'])
 def upload_file():
-    pathFile = uploadFile(request, 'file', app.config['UPLOAD_FOLDER'] )
-    print("pathFile", pathFile)
-    emails = readCSV(pathFile)
+    emails = read_file(request, 'file')    
     res = validate_emails(emails, enrollment)
-    
-
     return render_template(  "results.html", wrong_emails=res )
-    
-
-
-
+  
 
 
 
