@@ -7,14 +7,16 @@ from src.controller import *
 load_dotenv()
 app = Flask(__name__)
 UPLOAD_FOLDER= os.getenv('UPLOAD_FOLDER')
+DATA_STUDENTS= os.getenv('DATA_STUDENTS')
 app.config['UPLOAD_FOLDER']= UPLOAD_FOLDER
+app.config['DATA_STUDENTS']= DATA_STUDENTS
 enrollment=""
 
 
 @app.route("/")
 def home ():
     global enrollment
-    enrollment = loadEnrollment ('static/data/students.csv')   
+    enrollment = loadEnrollment (app.config['DATA_STUDENTS'])   
     print ("students", enrollment)
     return render_template(  "home.html")
 
