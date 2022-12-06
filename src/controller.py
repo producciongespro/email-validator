@@ -24,9 +24,9 @@ def upload_file (req, name, folder ):
         return os.path.join( folder, filename )
     return False
 
-def read_file (request, name ):
+def read_file (request, file ):
     emails = []
-    for line in request.files.get(name):
+    for line in file:
         string = str(line)
         record = string.split("'")        
         record = record[1]

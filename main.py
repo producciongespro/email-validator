@@ -1,4 +1,5 @@
 import os
+import time
 from dotenv import load_dotenv
 from flask import Flask, render_template, request
 from src.controller import *
@@ -6,10 +7,11 @@ from src.controller import *
 
 load_dotenv()
 app = Flask(__name__)
-UPLOAD_FOLDER= os.getenv('UPLOAD_FOLDER')
-DATA_STUDENTS= os.getenv('DATA_STUDENTS')
-app.config['UPLOAD_FOLDER']= UPLOAD_FOLDER
-app.config['DATA_STUDENTS']= DATA_STUDENTS
+app.config['UPLOAD_FOLDER']= os.getenv('UPLOAD_FOLDER')
+app.config['DATA_STUDENTS']= os.getenv('DATA_STUDENTS')
+app.config['FILE_NAME']= os.getenv('FILE_NAME')
+
+
 enrollment=""
 
 
@@ -23,12 +25,17 @@ def home ():
 
 @app.route('/validator', methods = ['POST'])
 def upload_file():
-    emails = read_file(request, 'file')    
-    res = validate_emails(emails, enrollment)
-
-    if res:
-        return render_template(  "results.html", wrong_emails=res )
-    return render_template(  "all-ggod.html" )
+    file = request.files.get(app.config['FILE_NAME'])
+    #print("request.files >>>>>>--------", file.filename )
+    if file.filename == "":
+        return render_template(  "not-valid.html" )
+    else:            
+        emails = read_file(request, file)    
+        res = validate_emails(emails, enrollment)
+        time.sleep(2)
+        if res:
+            return render_template(  "results.html", wrong_emails=res )
+        return render_template(  "all-ggod.html" )
   
 
 

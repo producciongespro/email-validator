@@ -27,6 +27,7 @@
       <div class="row">
         <div class="col-md-6 offset-md-3">
           <form
+            id="frmFile"
             action="http://localhost:5000/validator"
             method="POST"
             enctype="multipart/form-data"
@@ -34,22 +35,47 @@
             <div class="input-group">
               <input
                 type="file"
-                class="form-control"                
+                class="form-control"
+                id="inputFlie"
                 name="file"
                 aria-describedby="inputGroupFileAddon04"
                 aria-label="Upload"
+                accept=".csv"
               />
               <input
                 class="btn btn-outline-info"
                 type="submit"
                 id="btnSubmit"
                 value="Validar"
+                disabled
               />
             </div>
           </form>
         </div>
       </div>
+
+      <div class="row mt-4">
+        <div id="visor" class="col-12 alert alert-info"></div>
+      </div>
     </div>
+
+    <script>
+      console.log("dddd");
+      document.getElementById("inputFlie").addEventListener("change", (e) => {
+        const name = e.target.files[0].name.split(".");
+        console.log("cambiado", name[1]);
+        if (name[1].trim() == "csv") {
+          document.getElementById("btnSubmit").disabled = false;
+        }
+      });
+
+      document.getElementById("frmFile").addEventListener("submit", () => {
+        document.getElementById("visor").innerText =
+          "Enviando y procesando datos. Por favor espere...";
+        document.getElementById("btnSubmit").disabled = true;
+      });
+    </script>
+
     {% endblock %}
   </body>
 </html>
