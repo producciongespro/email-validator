@@ -14,11 +14,8 @@
     <title>API Validator</title>
   </head>
   <body>
-    {% extends 'base.html' %}
-
-    {% block content %}
-    <div class="container">      
-   
+    {% extends 'base.html' %} {% block content %}
+    <div class="container">
       <div class="row">
         <div class="col-12">
           Lorem ipsum dolor sit amet consectetur adipisicing elit. Esse totam
@@ -29,26 +26,59 @@
       </div>
       <div class="row">
         <div class="col-md-6 offset-md-3">
-          <form
-            action="http://localhost:5000/validator"
-            method="POST"
-            enctype="multipart/form-data"
-          >
-
-
-          <div class="input-group mb-3">
-            <input type="file" class="form-control" id="file" name="file">
-            <label type="submit"  class="input-group-text" for="file">Subir archivo</label>
-          </div>  
-          
-          <div class="d-grid gap-2">            
-            <input class="btn btn-outline-info" type="submit" value="Enviar">            
+          <div class="input-group">
+            <input
+              type="file"
+              class="form-control"
+              id="inpCSV"
+              aria-describedby="inputGroupFileAddon04"
+              aria-label="Upload"
+            />
+            <button class="btn btn-outline-info" type="button" id="btnEnviar">
+              Validar
+            </button>
           </div>
-            
-          </form>
         </div>
       </div>
-    </div> 
+    </div>
+    
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js" integrity="sha384-/KNQL8Nu5gCHLqwqfQjA689Hhoqgi2S84SNUxC3roTe4EhJ9AfLkp8QiQcU8AMzI" crossorigin="anonymous"></script>
+    <script>
+      
+      onload = () => setup();
+
+      function setup() {
+        const socket = io();
+        console.log("Iniciando aplicación");
+        socket.emit('message', "Hola desde el cliente" )
+        socket.on('message', msj => handleRecibirMensaje )
+        document.getElementById("btnEnviar").addEventListener("click", handleEnviar)
+      }
+
+      function handleRecibirMensaje(msj) {
+        console.log("Mensaje del servidor", msj);        
+      }
+   
+      
+
+      async function handleEnviar() {
+        const URI = "http://localhost:5000/validator";
+        const input = document.querySelector('input[type="file"]');
+        const data = new FormData();
+
+        data.append("file", input.files[0]);
+
+        const options = {
+          method: "POST",
+          body: data	
+    }
+
+        const res = await fetch(URI, options);
+        const json = await res.json();
+        console.log("json", json);
+      }
+    </script>
+
     {% endblock %}
   </body>
 </html>
