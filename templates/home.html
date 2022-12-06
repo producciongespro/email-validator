@@ -14,11 +14,8 @@
     <title>API Validator</title>
   </head>
   <body>
-    {% extends 'base.html' %}
-
-    {% block content %}
-    <div class="container">      
-   
+    {% extends 'base.html' %} {% block content %}
+    <div class="container">
       <div class="row">
         <div class="col-12">
           Lorem ipsum dolor sit amet consectetur adipisicing elit. Esse totam
@@ -34,21 +31,25 @@
             method="POST"
             enctype="multipart/form-data"
           >
-
-
-          <div class="input-group mb-3">
-            <input type="file" class="form-control" id="file" name="file">
-            <label type="submit"  class="input-group-text" for="file">Subir archivo</label>
-          </div>  
-          
-          <div class="d-grid gap-2">            
-            <input class="btn btn-outline-info" type="submit" value="Enviar">            
-          </div>
-            
+            <div class="input-group">
+              <input
+                type="file"
+                class="form-control"                
+                name="file"
+                aria-describedby="inputGroupFileAddon04"
+                aria-label="Upload"
+              />
+              <input
+                class="btn btn-outline-info"
+                type="submit"
+                id="btnSubmit"
+                value="Validar"
+              />
+            </div>
           </form>
         </div>
       </div>
-    </div> 
+    </div>
     {% endblock %}
   </body>
 </html>

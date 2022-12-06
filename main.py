@@ -16,8 +16,8 @@ enrollment=""
 @app.route("/")
 def home ():
     global enrollment
-    enrollment = loadEnrollment (app.config['DATA_STUDENTS'])   
-    print ("students", enrollment)
+    enrollment = load_enrollment (app.config['DATA_STUDENTS'])   
+    #print ("students", enrollment)
     return render_template(  "home.html")
 
 
