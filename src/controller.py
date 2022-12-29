@@ -36,7 +36,7 @@ def read_file (request, file ):
 
 def load_enrollment (pathFile):
     students=[]    
-    with open(pathFile, newline='') as csvfile:
+    with open(pathFile, newline='', encoding="utf8" ) as csvfile:
         spamreader = csv.reader(csvfile, delimiter=DELIMITER, quotechar='|')
         for row in spamreader:                       
             students.append(row[0])
@@ -46,7 +46,7 @@ def load_enrollment (pathFile):
 
 def read_csv (pathFile):
     emails=[]    
-    with open(pathFile, newline='') as csvfile:
+    with open(pathFile, newline='', encoding="utf8" ) as csvfile:
         spamreader = csv.reader(csvfile, delimiter=DELIMITER, quotechar='|')
         for row in spamreader:            
             emails.append(row[0])
