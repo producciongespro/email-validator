@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <title>Validador de Correos por CSV</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card: #111827;
+      --muted: #94a3b8;
+      --text: #e5e7eb;
+      --accent: #22d3ee;
+      --danger: #ef4444;
+      --ok: #22c55e;
+      --warn: #f59e0b;
+      --border: #1f2937;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto;
+      background: radial-gradient(1200px 600px at 100% 0%, #0b1020, #0f172a 40%, #0b1020 100%);
+      color: var(--text);
+    }
+    .wrap {
+      max-width: 980px; margin: 40px auto; padding: 0 16px;
+    }
+    header {
+      display: flex; align-items: center; justify-content: space-between; gap: 12px;
+      margin-bottom: 20px;
+    }
+    h1 { font-size: 26px; margin: 0; letter-spacing: .4px; }
+    .badge {
+      font-size: 12px; padding: 6px 10px; border-radius: 999px;
+      background: rgba(34, 211, 238, .12); border: 1px solid rgba(34, 211, 238, .35); color: var(--accent);
+    }
+    .card {
+      background: linear-gradient(180deg, #0b1222 0%, #0a0f1b 100%);
+      border: 1px solid var(--border);
+      border-radius: 16px; padding: 18px 18px;
+      box-shadow: 0 10px 30px rgba(0,0,0,.25);
+    }
+    .grid {
+      display: grid; grid-template-columns: 1fr; gap: 16px;
+    }
+    .uploader {
+      border: 2px dashed #334155; border-radius: 14px; padding: 22px;
+      text-align: center; transition: .2s ease all; background: #0b1222a6;
+    }
+    .uploader.dragover { border-color: var(--accent); background: rgba(34,211,238,.05); }
+    .uploader input { display: none; }
+    .btn {
+      background: #0e7490; color: white; padding: 12px 16px; border: none; border-radius: 10px;
+      cursor: pointer; font-weight: 600; letter-spacing: .3px;
+    }
+    .btn:hover { filter: brightness(1.08); }
+    .btn.secondary { background: #334155; }
+    .btn.warn { background: #b45309; }
+    .btn.ok { background: #15803d; }
+    .btn.danger { background: #b91c1c; }
+    .muted { color: var(--muted); font-size: 14px; }
+    .row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+    .stats {
+      display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 10px;
+    }
+    .stat {
+      background: #0b1222; border: 1px solid var(--border); border-radius: 12px; padding: 14px;
+    }
+    .stat h3 { margin: 0 0 6px; font-size: 13px; color: var(--muted); font-weight: 600; }
+    .stat .val { font-size: 20px; font-weight: 800; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { text-align: left; padding: 10px 8px; }
+    thead th { color: var(--muted); font-size: 13px; border-bottom: 1px solid var(--border); }
+    tbody tr { border-bottom: 1px solid var(--border); }
+    tbody tr:hover { background: rgba(148,163,184,.06); }
+    code.kbd { background: #0b1222; border: 1px solid var(--border); padding: 2px 6px; border-radius: 6px; font-size: 12px; }
+    .hide { display: none; }
+    footer { margin-top: 24px; font-size: 13px; color: var(--muted); text-align: center; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <h1>Validador de Correos por CSV</h1>
+      <span class="badge">Frontend + Backend</span>
+    </header>
+
+    <div class="grid">
+      <div class="card">
+        <div class="uploader" id="dropzone">
+          <p><strong>Arrastra tu CSV aquí</strong> o <label for="file" class="btn secondary">selecciónalo</label></p>
+          <p class="muted">El archivo debe tener los correos en la <strong>primera columna</strong>. Encabezados como <code class="kbd">email</code> o <code class="kbd">correo</code> se ignoran.</p>
+          <input id="file" type="file" accept=".csv" />
+        </div>
+        <div class="row" style="margin-top: 12px;">
+          <button id="btnValidate" class="btn">Validar CSV</button>
+          <button id="btnClear" class="btn secondary">Limpiar</button>
+        <button id="btnDownload" class="btn warn hide">Descargar CSV de erróneos</button>
+		<button id="btnDownloadOk" class="btn ok hide">Descargar correos correctos</button>
+
+          <span id="fileInfo" class="muted"></span>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="stats">
+          <div class="stat">
+            <h3>Filas procesadas</h3>
+            <div class="val" id="statTotal">0</div>
+          </div>
+          <div class="stat">
+            <h3>Erróneos</h3>
+            <div class="val" id="statWrongs">0</div>
+          </div>
+          <div class="stat">
+            <h3>Estado</h3>
+            <div class="val" id="statStatus">Listo</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2 style="margin: 0 0 10px;">Resultados</h2>
+        <div id="emptyState" class="muted">Aún no hay resultados. Sube un CSV y pulsa “Validar CSV”.</div>
+        <div id="results" class="hide">
+          <table>
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Correo</th>
+              </tr>
+            </thead>
+            <tbody id="tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      Hecho con 💙 — Acepta CSV hasta 5 MB — Si tu maestro cambia, actualiza <code class="kbd">data/students.csv</code>.
+    </footer>
+  </div>
+
+  <script src="./main.js"></script>
+
+</body>
+</html>

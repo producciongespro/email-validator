@@ -1,0 +1,17 @@
+{
+  "name": "validador-csv",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Validador de correos por CSV (Node + Express + cliente web)",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "node --watch app.js"
+  },
+  "dependencies": {
+    "csv-parse": "^5.5.6",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "multer": "^1.4.5-lts.1"
+  }
+}
